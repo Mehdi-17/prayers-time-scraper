@@ -9,12 +9,12 @@ import (
 	"time"
 )
 
-type Salat struct {
+type salat struct {
 	Name string
 	Hour time.Time
 }
 
-type ErrorScraping struct {
+type errorScraping struct {
 	err     error
 	message string
 }
@@ -22,14 +22,14 @@ type ErrorScraping struct {
 const bouzignacMasjid = "https://mawaqit.net/en/mosquee-de-bouzignac-tours-37000-france-1"
 
 func ScrapePrayers() {
-	var salatToday []Salat
+	var salatToday []salat
 
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithLogf(log.Printf))
 	defer cancel()
 
 	var nodes []*cdp.Node
 
-	errorRunBrowser := ErrorScraping{
+	errorRunBrowser := errorScraping{
 		message: "Erreur lors du lancement du browser sur le lien : ",
 	}
 	errorRunBrowser.err = chromedp.Run(ctx,
@@ -42,7 +42,7 @@ func ScrapePrayers() {
 	for _, node := range nodes {
 		var salatName, salatTimeStr string
 
-		errNodeScraping := ErrorScraping{
+		errNodeScraping := errorScraping{
 			message: "Erreur lors de la récupération des noeuds css : ",
 		}
 		errNodeScraping.err = chromedp.Run(ctx,
@@ -50,16 +50,20 @@ func ScrapePrayers() {
 			chromedp.Text("div.time div", &salatTimeStr, chromedp.ByQuery, chromedp.FromNode(node)),
 		)
 
+		if salatName == "" || salatTimeStr == "" {
+			fmt.Printf("Le nom de la prière => %s, ou l'heure est vide => %s", salatName, salatTimeStr)
+		}
+
 		displayErrorConsole(errNodeScraping)
 
-		errParseDate := ErrorScraping{
+		errParseDate := errorScraping{
 			message: "Erreur lors de la conversion de l'heure : ",
 		}
 		var salatTime time.Time
 		salatTime, errParseDate.err = time.Parse("15:04", salatTimeStr)
 		displayErrorConsole(errParseDate)
 
-		aSalat := Salat{
+		aSalat := salat{
 			Name: salatName,
 			Hour: salatTime,
 		}
@@ -69,7 +73,7 @@ func ScrapePrayers() {
 	}
 }
 
-func displayErrorConsole(errScraping ErrorScraping) {
+func displayErrorConsole(errScraping errorScraping) {
 	if errScraping.err != nil {
 		log.Println(errScraping.message, errScraping.err)
 	}
