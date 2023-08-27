@@ -3,6 +3,9 @@
 *.a
 *.so
 
+#env file
+.env
+
 # Folders
 _obj
 _test

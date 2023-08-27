@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type salat struct {
+type Salat struct {
 	Name string
 	Hour time.Time
 }
@@ -21,9 +21,8 @@ type errorScraping struct {
 
 const bouzignacMasjid = "https://mawaqit.net/en/mosquee-de-bouzignac-tours-37000-france-1"
 
-func ScrapePrayers() {
-	var salatToday []salat
-
+func GetSalatTime() [5]Salat {
+	//Setup headless browser
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithLogf(log.Printf))
 	defer cancel()
 
@@ -39,7 +38,12 @@ func ScrapePrayers() {
 
 	displayErrorConsole(errorRunBrowser)
 
-	for _, node := range nodes {
+	return scrapingMawaqitWebsite(ctx, nodes)
+}
+
+func scrapingMawaqitWebsite(ctx context.Context, nodes []*cdp.Node) [5]Salat {
+	var salatToday [5]Salat
+	for salatNumber, node := range nodes {
 		var salatName, salatTimeStr string
 
 		errNodeScraping := errorScraping{
@@ -51,7 +55,7 @@ func ScrapePrayers() {
 		)
 
 		if salatName == "" || salatTimeStr == "" {
-			fmt.Printf("Le nom de la prière => %s, ou l'heure est vide => %s", salatName, salatTimeStr)
+			log.Fatalf("Le nom de la prière => %s, ou l'heure est vide => %s", salatName, salatTimeStr)
 		}
 
 		displayErrorConsole(errNodeScraping)
@@ -63,18 +67,19 @@ func ScrapePrayers() {
 		salatTime, errParseDate.err = time.Parse("15:04", salatTimeStr)
 		displayErrorConsole(errParseDate)
 
-		aSalat := salat{
+		aSalat := Salat{
 			Name: salatName,
 			Hour: salatTime,
 		}
 
 		fmt.Println(aSalat)
-		salatToday = append(salatToday, aSalat)
+		salatToday[salatNumber] = aSalat
 	}
+	return salatToday
 }
 
 func displayErrorConsole(errScraping errorScraping) {
 	if errScraping.err != nil {
-		log.Println(errScraping.message, errScraping.err)
+		log.Fatal(errScraping.message, errScraping.err)
 	}
 }
