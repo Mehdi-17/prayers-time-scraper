@@ -71,6 +71,6 @@ func ScrapePrayers() {
 
 func displayErrorConsole(errScraping ErrorScraping) {
 	if errScraping.err != nil {
-		log.Println(errScraping.message)
+		log.Println(errScraping.message, errScraping.err)
 	}
 }
