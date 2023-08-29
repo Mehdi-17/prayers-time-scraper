@@ -12,11 +12,11 @@ import (
 )
 
 func SetUpBotConfiguration(salatOfTheDay [5]scraping.Salat) {
-	//TODO : voir pour sortir ça d'ici, on a pas besoin de récupérer ces données tous les jours, une fois suffit
+	//TODO: voir pour sortir ça d'ici, on a pas besoin de récupérer ces données tous les jours, une fois suffit
 	token, chatId := getApiTokenFromEnv()
 	bot, err := tgBotApi.NewBotAPI(token)
 
-	//TODO : gestion des erreurs
+	//TODO: gestion des erreurs
 	if err != nil {
 		log.Fatal("Erreur lors de la création du bot api : ", err)
 	}
@@ -24,6 +24,7 @@ func SetUpBotConfiguration(salatOfTheDay [5]scraping.Salat) {
 
 	c := cron.New()
 
+	//TODO: mettre en place des cron pour envoyer des rappels 10 minutes avant l'heure des prières
 	for _, salat := range salatOfTheDay {
 		// We have to reassign prayer's data so that each anonymous function has its own data.
 		salatName := salat.Name
