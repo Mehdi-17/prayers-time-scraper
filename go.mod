@@ -16,5 +16,6 @@ require (
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/robfig/cron/v3 v3.0.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 )
