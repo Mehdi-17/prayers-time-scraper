@@ -13,6 +13,7 @@ func main() {
 		salatOfTheDay := scraping.GetSalatTime()
 		scraping.SetUpBotConfiguration(salatOfTheDay)
 	})
+
 	c.Start()
 	if err != nil {
 		log.Fatal("Erreur lors du paramétrage du cron pour scrapper les données : ", err)
