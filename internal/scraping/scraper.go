@@ -10,8 +10,9 @@ import (
 )
 
 type Salat struct {
-	Name string
-	Hour time.Time
+	Name         string
+	Time         time.Time
+	reminderTime time.Time
 }
 
 type errorScraping struct {
@@ -20,6 +21,7 @@ type errorScraping struct {
 }
 
 const bouzignacMasjid = "https://mawaqit.net/en/mosquee-de-bouzignac-tours-37000-france-1"
+const reminderTime = -10
 
 func GetSalatTime() [5]Salat {
 	//Setup headless browser
@@ -68,8 +70,9 @@ func scrapingMawaqitWebsite(ctx context.Context, nodes []*cdp.Node) [5]Salat {
 		displayErrorConsole(errParseDate)
 
 		aSalat := Salat{
-			Name: salatName,
-			Hour: salatTime,
+			Name:         salatName,
+			Time:         salatTime,
+			reminderTime: salatTime.Add(reminderTime * time.Minute),
 		}
 
 		fmt.Println(aSalat)
