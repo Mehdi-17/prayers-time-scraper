@@ -1,6 +1,6 @@
 module prayers-time-scraper
 
-go 1.21.0
+go 1.21
 
 require (
 	github.com/chromedp/cdproto v0.0.0-20230816033919-17ee49f3eb4f
