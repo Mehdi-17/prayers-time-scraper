@@ -9,10 +9,7 @@ import (
 func main() {
 	c := cron.New()
 
-	_, err := c.AddFunc("CRON_TZ=Europe/Paris 0 3 * * *", func() {
-		salatOfTheDay := scraping.GetSalatTime()
-		scraping.SetUpBotConfiguration(salatOfTheDay)
-	})
+	_, err := c.AddFunc("CRON_TZ=Europe/Paris 0 3 * * *", scraping.ScrapeAndNotify)
 
 	c.Start()
 	if err != nil {

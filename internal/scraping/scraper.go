@@ -23,7 +23,12 @@ type errorScraping struct {
 const bouzignacMasjid = "https://mawaqit.net/en/mosquee-de-bouzignac-tours-37000-france-1"
 const reminderTime = -10
 
-func GetSalatTime() [5]Salat {
+func ScrapeAndNotify() {
+	salatOfTheDay := getSalatTime()
+	SetUpBotConfiguration(salatOfTheDay)
+}
+
+func getSalatTime() [5]Salat {
 	//Setup headless browser
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithLogf(log.Printf))
 	defer cancel()
