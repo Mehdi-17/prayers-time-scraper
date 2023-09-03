@@ -30,7 +30,7 @@ func SetUpBotConfiguration(salatOfTheDay [5]Salat) {
 
 func (salat Salat) setUpAdhanAndReminder(c *cron.Cron, bot *tgBotApi.BotAPI, chatId int64) {
 	_, errSetUpCronReminder := c.AddFunc(fmt.Sprintf("CRON_TZ=Europe/Paris %d %d * * *", salat.reminderTime.Minute(), salat.reminderTime.Hour()), func() {
-		sendMessageToTelegram(bot, chatId, fmt.Sprintf("RAPPEL : Salat %s à %v:%v.", salat.Name, salat.Time.Hour(), salat.Time.Minute()))
+		sendMessageToTelegram(bot, chatId, fmt.Sprintf("RAPPEL : Salat %s à %02d:%02d.", salat.Name, salat.Time.Hour(), salat.Time.Minute()))
 	})
 
 	if errSetUpCronReminder != nil {
