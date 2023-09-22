@@ -1,11 +1,21 @@
 package scraping
 
 import (
+	"context"
+	"github.com/chromedp/cdproto/cdp"
 	"testing"
 )
 
+type MockWebScraper struct{}
+
+func (m *MockWebScraper) ScrapeMawaqitWebsite(ctx context.Context, nodes []*cdp.Node) [5]Salat {
+	return [5]Salat{}
+}
+
 func TestGetSalatTime(t *testing.T) {
-	got := getSalatTime()
+	realScraper := &RealScraper{}
+
+	got := getSalatTime(realScraper)
 	wantedSalatNamed := []string{"Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"}
 
 	for i, salatName := range wantedSalatNamed {

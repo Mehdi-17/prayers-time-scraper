@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+type WebScraper interface {
+	ScrapeMawaqitWebsite(ctx context.Context, nodes []*cdp.Node) [5]Salat
+}
 type Salat struct {
 	Name         string
 	Time         time.Time
@@ -20,15 +23,18 @@ type errorScraping struct {
 	message string
 }
 
+type RealScraper struct{}
+
 const bouzignacMasjid = "https://mawaqit.net/en/mosquee-de-bouzignac-tours-37000-france-1"
 const reminderTime = -10
 
 func ScrapeAndNotify() {
-	salatOfTheDay := getSalatTime()
+	scraper := &RealScraper{}
+	salatOfTheDay := getSalatTime(scraper)
 	SetUpBotConfiguration(salatOfTheDay)
 }
 
-func getSalatTime() [5]Salat {
+func getSalatTime(scraper WebScraper) [5]Salat {
 	//Setup headless browser
 	ctx, cancel := chromedp.NewContext(context.Background(), chromedp.WithLogf(log.Printf))
 	defer cancel()
@@ -45,10 +51,10 @@ func getSalatTime() [5]Salat {
 
 	displayErrorConsole(errorRunBrowser)
 
-	return scrapingMawaqitWebsite(ctx, nodes)
+	return scraper.ScrapeMawaqitWebsite(ctx, nodes)
 }
 
-func scrapingMawaqitWebsite(ctx context.Context, nodes []*cdp.Node) [5]Salat {
+func (scraper *RealScraper) ScrapeMawaqitWebsite(ctx context.Context, nodes []*cdp.Node) [5]Salat {
 	var salatToday [5]Salat
 	for salatNumber, node := range nodes {
 		var salatName, salatTimeStr string
