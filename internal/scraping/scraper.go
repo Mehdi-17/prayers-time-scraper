@@ -28,8 +28,7 @@ type RealScraper struct{}
 const bouzignacMasjid = "https://mawaqit.net/en/mosquee-de-bouzignac-tours-37000-france-1"
 const reminderTime = -10
 
-func ScrapeAndNotify() {
-	scraper := &RealScraper{}
+func ScrapeAndNotify(scraper WebScraper) {
 	salatOfTheDay := getSalatTime(scraper)
 	SetUpBotConfiguration(salatOfTheDay)
 }

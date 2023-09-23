@@ -28,3 +28,10 @@ func TestGetSalatTime(t *testing.T) {
 		}
 	}
 }
+
+//TODO : test scrapeAndNotify
+//func TestScrapeAndNotify_WhenNoSalat(t *testing.T) {
+//	mockScraper := &MockWebScraper{}
+//
+//	ScrapeAndNotify(mockScraper)
+//}
